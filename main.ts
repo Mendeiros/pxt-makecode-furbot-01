@@ -1,26 +1,21 @@
-control.onEvent(irRemote.returnIrButton(), 64, function () {
-    direçãoInicial = input.compassHeading()
-    rangeNORTE = direçãoInicial + 45
-    rangeLESTE = rangeNORTE + 90
-    rangeSUL = rangeLESTE + 90
-    rangeOESTE = rangeSUL + 90
-})
+let leituraImagem = ""
 let sonar = 0
 let lerCarta = false
 let valores = 0
-let switchAndar = false
-let rangeOESTE = 0
-let rangeSUL = 0
-let rangeLESTE = 0
-let rangeNORTE = 0
-let direçãoInicial = 0
-irRemote.connectInfrared(DigitalPin.P11)
 serial.redirect(
 SerialPin.P12,
 SerialPin.P13,
 BaudRate.BaudRate115200
 )
+let lista_Direções = [
+"N",
+"O",
+"S",
+"L"
+]
+let direçãoAtual = 0
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+let switchAndar = true
 basic.forever(function () {
     while (switchAndar) {
         valores = turtleBit.LineTracking()
@@ -38,7 +33,7 @@ basic.forever(function () {
             switchAndar = false
             lerCarta = true
         } else {
-            turtleBit.run(DIR.Run_forward, 100)
+            turtleBit.run(DIR.Run_forward, 75)
             basic.pause(200)
             basic.showLeds(`
                 . # . # .
@@ -57,23 +52,37 @@ basic.forever(function () {
                 `)
         }
     }
-    while (lerCarta == true) {
+    while (lerCarta) {
         sonar = turtleBit.ultra()
         basic.showNumber(sonar)
-        if (sonar < 10 && sonar != 0) {
-            let leituraImagem = ""
+        if (sonar < 10 && sonar < 7) {
+            leituraImagem = ""
             serial.writeLine(mensagemFoto)
             basic.pause(5000)
-            if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && (input.compassHeading() < rangeNORTE || input.compassHeading() > rangeOESTE)) {
+            if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
+                turtleBit.Motor(LR.LeftSide, MD.Forward, 75)
+                turtleBit.Motor(LR.RightSide, MD.Back, 65)
+                direçãoAtual += 1
+                if (direçãoAtual == 4) {
+                    direçãoAtual = 0
+                }
+            } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
+                turtleBit.Motor(LR.RightSide, MD.Forward, 75)
+                turtleBit.Motor(LR.LeftSide, MD.Back, 65)
+                direçãoAtual += -1
+                if (direçãoAtual == -5) {
+                    direçãoAtual = 3
+                }
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && lista_Direções[direçãoAtual] == "N") {
                 switchAndar = true
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && input.compassHeading() < rangeSUL) {
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && lista_Direções[direçãoAtual] == "O") {
                 switchAndar = true
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && input.compassHeading() < rangeLESTE) {
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && lista_Direções[direçãoAtual] == "L") {
                 switchAndar = true
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && input.compassHeading() < rangeOESTE) {
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && lista_Direções[direçãoAtual] == "S") {
                 switchAndar = true
                 lerCarta = false
             } else {

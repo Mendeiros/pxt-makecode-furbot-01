@@ -7,10 +7,10 @@ def on_on_event():
     rangeOESTE = rangeSUL + 90
 control.on_event(irRemote.return_ir_button(), 64, on_on_event)
 
-leituraImagem = ""
 sonar = 0
 lerCarta = False
 valores = 0
+switchAndar = False
 rangeOESTE = 0
 rangeSUL = 0
 rangeLESTE = 0
@@ -19,10 +19,9 @@ direçãoInicial = 0
 irRemote.connect_infrared(DigitalPin.P11)
 serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
 mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-switchAndar = False
 
 def on_forever():
-    global valores, switchAndar, lerCarta, sonar, leituraImagem
+    global valores, switchAndar, lerCarta, sonar
     while switchAndar:
         valores = turtleBit.line_tracking()
         if valores > 0:
@@ -43,7 +42,7 @@ def on_forever():
             basic.pause(200)
             basic.show_leds("""
                 . # . # .
-                                # . . . #
+                                . . . . .
                                 # # # # #
                                 # # # # #
                                 . # # # .
@@ -60,11 +59,10 @@ def on_forever():
         sonar = turtleBit.ultra()
         basic.show_number(sonar)
         if sonar < 10 and sonar != 0:
+            leituraImagem = ""
             serial.write_line(mensagemFoto)
             basic.pause(5000)
-
-
-            if leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and input.compass_heading() < rangeNORTE:
+            if leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and (input.compass_heading() < rangeNORTE or input.compass_heading() > rangeOESTE):
                 switchAndar = True
                 lerCarta = False
             elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and input.compass_heading() < rangeSUL:
