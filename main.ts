@@ -56,9 +56,9 @@ basic.forever(function () {
         sonar = turtleBit.ultra()
         basic.showNumber(sonar)
         if (sonar < 10 && sonar < 7) {
-            leituraImagem = ""
             serial.writeLine(mensagemFoto)
             basic.pause(5000)
+            leituraImagem = ""
             if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
                 turtleBit.Motor(LR.LeftSide, MD.Forward, 75)
                 turtleBit.Motor(LR.RightSide, MD.Back, 65)
