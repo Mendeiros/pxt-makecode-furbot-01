@@ -2,6 +2,7 @@ let leituraImagem = ""
 let sonar = 0
 let lerCarta = false
 let valores = 0
+music.setVolume(33)
 serial.redirect(
 SerialPin.P12,
 SerialPin.P13,
@@ -33,7 +34,7 @@ basic.forever(function () {
             switchAndar = false
             lerCarta = true
         } else {
-            turtleBit.run(DIR.Run_forward, 75)
+            turtleBit.run(DIR.Run_forward, 65)
             basic.pause(200)
             basic.showLeds(`
                 . # . # .
@@ -54,21 +55,20 @@ basic.forever(function () {
     }
     while (lerCarta) {
         sonar = turtleBit.ultra()
-        basic.showNumber(sonar)
         if (sonar < 10 && sonar < 7) {
             serial.writeLine(mensagemFoto)
             basic.pause(5000)
             leituraImagem = ""
             if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
-                turtleBit.Motor(LR.LeftSide, MD.Forward, 75)
-                turtleBit.Motor(LR.RightSide, MD.Back, 65)
+                turtleBit.Motor(LR.LeftSide, MD.Forward, 80)
+                turtleBit.Motor(LR.RightSide, MD.Back, 70)
                 direçãoAtual += 1
                 if (direçãoAtual == 4) {
                     direçãoAtual = 0
                 }
             } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
-                turtleBit.Motor(LR.RightSide, MD.Forward, 75)
-                turtleBit.Motor(LR.LeftSide, MD.Back, 65)
+                turtleBit.Motor(LR.RightSide, MD.Forward, 80)
+                turtleBit.Motor(LR.LeftSide, MD.Back, 70)
                 direçãoAtual += -1
                 if (direçãoAtual == -5) {
                     direçãoAtual = 3
@@ -87,6 +87,7 @@ basic.forever(function () {
                 lerCarta = false
             } else {
                 basic.pause(120)
+                music.playTone(277, music.beat(BeatFraction.Whole))
                 basic.clearScreen()
                 basic.showLeds(`
                     # # . # #
@@ -104,6 +105,7 @@ basic.forever(function () {
                     # . . . #
                     `)
                 basic.pause(200)
+                music.playTone(139, music.beat(BeatFraction.Whole))
                 basic.showLeds(`
                     # # . # #
                     . . . . .
