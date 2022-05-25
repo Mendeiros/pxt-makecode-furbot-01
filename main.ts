@@ -1,12 +1,8 @@
-let leituraImagem = ""
-let sonar = 0
-let lerCarta = false
+let infraRED = 0
 let valores = 0
-serial.redirect(
-SerialPin.P12,
-SerialPin.P13,
-BaudRate.BaudRate115200
-)
+let VARIAVELdoMUSICAremoverDEPOIS = true
+irRemote.connectInfrared(DigitalPin.P11)
+music.setVolume(33)
 let lista_Direções = [
 "N",
 "O",
@@ -14,8 +10,8 @@ let lista_Direções = [
 "L"
 ]
 let direçãoAtual = 0
-let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-let switchAndar = true
+let switchAndar = false
+let lerCarta = true
 basic.forever(function () {
     while (switchAndar) {
         valores = turtleBit.LineTracking()
@@ -33,7 +29,7 @@ basic.forever(function () {
             switchAndar = false
             lerCarta = true
         } else {
-            turtleBit.run(DIR.Run_forward, 75)
+            turtleBit.run(DIR.Run_forward, 60)
             basic.pause(200)
             basic.showLeds(`
                 . # . # .
@@ -53,65 +49,70 @@ basic.forever(function () {
         }
     }
     while (lerCarta) {
-        sonar = turtleBit.ultra()
-        basic.showNumber(sonar)
-        if (sonar < 10 && sonar < 7) {
-            serial.writeLine(mensagemFoto)
-            basic.pause(5000)
-            leituraImagem = ""
-            if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
-                turtleBit.Motor(LR.LeftSide, MD.Forward, 75)
-                turtleBit.Motor(LR.RightSide, MD.Back, 65)
-                direçãoAtual += 1
-                if (direçãoAtual == 4) {
-                    direçãoAtual = 0
-                }
-            } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
-                turtleBit.Motor(LR.RightSide, MD.Forward, 75)
-                turtleBit.Motor(LR.LeftSide, MD.Back, 65)
-                direçãoAtual += -1
-                if (direçãoAtual == -5) {
-                    direçãoAtual = 3
-                }
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && lista_Direções[direçãoAtual] == "N") {
-                switchAndar = true
-                lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && lista_Direções[direçãoAtual] == "O") {
-                switchAndar = true
-                lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && lista_Direções[direçãoAtual] == "L") {
-                switchAndar = true
-                lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && lista_Direções[direçãoAtual] == "S") {
-                switchAndar = true
-                lerCarta = false
-            } else {
-                basic.pause(120)
-                basic.clearScreen()
-                basic.showLeds(`
-                    # # . # #
-                    # . . . .
-                    . # # # .
-                    # # . # #
-                    # . . . #
-                    `)
-                basic.pause(200)
-                basic.showLeds(`
-                    # # . # #
-                    . . . . .
-                    # # # # .
-                    # # . # #
-                    # . . . #
-                    `)
-                basic.pause(200)
-                basic.showLeds(`
-                    # # . # #
-                    . . . . .
-                    . # # # .
-                    # # . # #
-                    # . . . #
-                    `)
+        infraRED = irRemote.returnIrButton()
+        if (infraRED == 74) {
+            turtleBit.Motor(LR.LeftSide, MD.Forward, 80)
+            turtleBit.Motor(LR.RightSide, MD.Back, 70)
+            direçãoAtual += 1
+            if (direçãoAtual == 4) {
+                direçãoAtual = 0
             }
+            basic.pause(750)
+            turtleBit.state(MotorState.stop)
+        } else if (infraRED == 66) {
+            turtleBit.Motor(LR.RightSide, MD.Forward, 80)
+            turtleBit.Motor(LR.LeftSide, MD.Back, 70)
+            direçãoAtual += -1
+            if (direçãoAtual == -5) {
+                direçãoAtual = 3
+            }
+            basic.pause(750)
+            turtleBit.state(MotorState.stop)
+        } else if (infraRED == 70 && lista_Direções[direçãoAtual] == "N") {
+            switchAndar = true
+            lerCarta = false
+        } else if (infraRED == 68 && lista_Direções[direçãoAtual] == "O") {
+            switchAndar = true
+            lerCarta = false
+        } else if (infraRED == 67 && lista_Direções[direçãoAtual] == "L") {
+            switchAndar = true
+            lerCarta = false
+        } else if (infraRED == 21 && lista_Direções[direçãoAtual] == "S") {
+            switchAndar = true
+            lerCarta = false
+        } else {
+            basic.pause(120)
+            if (VARIAVELdoMUSICAremoverDEPOIS) {
+                music.playTone(277, music.beat(BeatFraction.Whole))
+            }
+            basic.clearScreen()
+            basic.showLeds(`
+                # # . # #
+                # . . . .
+                . # # # .
+                # # . # #
+                # . . . #
+                `)
+            basic.pause(200)
+            basic.showLeds(`
+                # # . # #
+                . . . . .
+                # # # # .
+                # # . # #
+                # . . . #
+                `)
+            basic.pause(200)
+            if (VARIAVELdoMUSICAremoverDEPOIS) {
+                music.playTone(139, music.beat(BeatFraction.Whole))
+            }
+            basic.showLeds(`
+                # # . # #
+                . . . . .
+                . # # # .
+                # # . # #
+                # . . . #
+                `)
+            VARIAVELdoMUSICAremoverDEPOIS = false
         }
     }
 })
