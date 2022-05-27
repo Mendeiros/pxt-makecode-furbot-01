@@ -2,18 +2,11 @@ let leituraImagem = ""
 let sonar = 0
 let lerCarta = false
 let valores = 0
-music.setVolume(33)
 serial.redirect(
 SerialPin.P12,
 SerialPin.P13,
 BaudRate.BaudRate115200
 )
-let lista_Direções = [
-"N",
-"O",
-"S",
-"L"
-]
 let direçãoAtual = 0
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
 let switchAndar = true
@@ -28,13 +21,13 @@ basic.forever(function () {
                 # . . . #
                 . # # # .
                 `)
-            basic.pause(1500)
+            basic.pause(1250)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
             switchAndar = false
             lerCarta = true
         } else {
-            turtleBit.run(DIR.Run_forward, 65)
+            turtleBit.run(DIR.Run_forward, 55)
             basic.pause(200)
             basic.showLeds(`
                 . # . # .
@@ -55,39 +48,52 @@ basic.forever(function () {
     }
     while (lerCarta) {
         sonar = turtleBit.ultra()
-        if (sonar < 10 && sonar < 7) {
+        if (sonar < 12 && sonar < 7) {
             serial.writeLine(mensagemFoto)
-            basic.pause(5000)
+            basic.pause(2500)
             leituraImagem = ""
             if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
-                turtleBit.Motor(LR.LeftSide, MD.Forward, 80)
-                turtleBit.Motor(LR.RightSide, MD.Back, 70)
+                lerCarta = false
+                turtleBit.run(DIR.Run_back, 55)
+                basic.pause(280)
+                turtleBit.run(DIR.Turn_Right, 55)
                 direçãoAtual += 1
-                if (direçãoAtual == 4) {
+                if (direçãoAtual > 3) {
                     direçãoAtual = 0
                 }
+                basic.pause(1062)
+                turtleBit.run(DIR.Run_forward, 55)
+                basic.pause(280)
+                turtleBit.state(MotorState.stop)
+                lerCarta = true
             } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
-                turtleBit.Motor(LR.RightSide, MD.Forward, 80)
-                turtleBit.Motor(LR.LeftSide, MD.Back, 70)
+                lerCarta = false
+                turtleBit.run(DIR.Run_back, 55)
+                basic.pause(280)
+                turtleBit.run(DIR.Turn_Left, 55)
                 direçãoAtual += -1
-                if (direçãoAtual == -5) {
+                if (direçãoAtual < 0) {
                     direçãoAtual = 3
                 }
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && lista_Direções[direçãoAtual] == "N") {
-                switchAndar = true
+                basic.pause(1145)
+                turtleBit.run(DIR.Run_forward, 55)
+                basic.pause(280)
+                turtleBit.state(MotorState.stop)
+                lerCarta = true
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && direçãoAtual == 0) {
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && lista_Direções[direçãoAtual] == "O") {
                 switchAndar = true
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && direçãoAtual == 1) {
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && lista_Direções[direçãoAtual] == "L") {
                 switchAndar = true
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && direçãoAtual == 2) {
                 lerCarta = false
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && lista_Direções[direçãoAtual] == "S") {
                 switchAndar = true
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && direçãoAtual == 3) {
                 lerCarta = false
+                switchAndar = true
             } else {
                 basic.pause(120)
-                music.playTone(277, music.beat(BeatFraction.Whole))
                 basic.clearScreen()
                 basic.showLeds(`
                     # # . # #
@@ -105,7 +111,6 @@ basic.forever(function () {
                     # . . . #
                     `)
                 basic.pause(200)
-                music.playTone(139, music.beat(BeatFraction.Whole))
                 basic.showLeds(`
                     # # . # #
                     . . . . .
