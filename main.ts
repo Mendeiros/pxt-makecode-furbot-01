@@ -1,50 +1,44 @@
 let leituraImagem = ""
 let sonar = 0
 let lerCarta = false
-let valores = 0
-serial.redirect(
-SerialPin.P12,
-SerialPin.P13,
-BaudRate.BaudRate115200
-)
+let valoresIRs = 0
+serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BaudRate115200)
 let direçãoAtual = 0
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-let switchAndar = true
-basic.forever(function () {
-    while (switchAndar) {
-        valores = turtleBit.LineTracking()
-        if (valores > 0) {
+let andarReto = true
+input.onSound(DetectedSound.Loud, function on_loud_sound() {
+    serial.writeLine(mensagemFoto)
+    let lerCarta = true
+})
+basic.forever(function on_forever() {
+    
+    while (andarReto) {
+        valoresIRs = turtleBit.LineTracking()
+        if (valoresIRs > 0) {
             basic.showLeds(`
-                . # # # .
-                # . . . #
-                # # # # #
-                # . . . #
-                . # # # .
-                `)
-            basic.pause(1250)
+                                . # # # .
+                                # . # . #
+                                # # . # #
+                                # . # . #
+                                . # # # .
+            `)
+            basic.pause(1200)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
-            switchAndar = false
+            andarReto = false
             lerCarta = true
         } else {
             turtleBit.run(DIR.Run_forward, 55)
             basic.pause(200)
             basic.showLeds(`
-                . # . # .
-                . . . . .
-                # # # # #
-                # # # # #
-                . # # # .
-                `)
-            basic.pause(200)
-            basic.showLeds(`
-                . # . # .
-                . . . . .
-                # . . . #
-                . # # # .
-                . . . . .
-                `)
+                                . # . # .
+                                . . . . .
+                                # # # # #
+                                # # # # #
+                                . # # # .
+            `)
         }
+        
     }
     while (lerCarta) {
         sonar = turtleBit.ultra()
@@ -61,6 +55,7 @@ basic.forever(function () {
                 if (direçãoAtual > 3) {
                     direçãoAtual = 0
                 }
+                
                 basic.pause(1062)
                 turtleBit.run(DIR.Run_forward, 55)
                 basic.pause(280)
@@ -75,6 +70,7 @@ basic.forever(function () {
                 if (direçãoAtual < 0) {
                     direçãoAtual = 3
                 }
+                
                 basic.pause(1145)
                 turtleBit.run(DIR.Run_forward, 55)
                 basic.pause(280)
@@ -82,43 +78,45 @@ basic.forever(function () {
                 lerCarta = true
             } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && direçãoAtual == 0) {
                 lerCarta = false
-                switchAndar = true
+                andarReto = true
             } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && direçãoAtual == 1) {
                 lerCarta = false
-                switchAndar = true
+                andarReto = true
             } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && direçãoAtual == 2) {
                 lerCarta = false
-                switchAndar = true
+                andarReto = true
             } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && direçãoAtual == 3) {
                 lerCarta = false
-                switchAndar = true
+                andarReto = true
             } else {
                 basic.pause(120)
                 basic.clearScreen()
                 basic.showLeds(`
-                    # # . # #
-                    # . . . .
-                    . # # # .
-                    # # . # #
-                    # . . . #
-                    `)
-                basic.pause(200)
+                                        # # . # #
+                                        # . . . .
+                                        . # # # .
+                                        # # . # #
+                                        # . . . #
+                `)
+                basic.pause(120)
                 basic.showLeds(`
-                    # # . # #
-                    . . . . .
-                    # # # # .
-                    # # . # #
-                    # . . . #
-                    `)
-                basic.pause(200)
+                                        # # . # #
+                                        . . . . .
+                                        # # # # .
+                                        # # . # #
+                                        # . . . #
+                `)
+                basic.pause(120)
                 basic.showLeds(`
-                    # # . # #
-                    . . . . .
-                    . # # # .
-                    # # . # #
-                    # . . . #
-                    `)
+                                        # # . # #
+                                        . . . . .
+                                        . # # # .
+                                        # # . # #
+                                        # . . . #
+                `)
             }
+            
         }
+        
     }
 })

@@ -1,100 +1,109 @@
-def on_on_event():
-    global direçãoInicial, rangeNORTE, rangeLESTE, rangeSUL, rangeOESTE
-    direçãoInicial = input.compass_heading()
-    rangeNORTE = direçãoInicial + 45
-    rangeLESTE = rangeNORTE + 90
-    rangeSUL = rangeLESTE + 90
-    rangeOESTE = rangeSUL + 90
-control.on_event(irRemote.return_ir_button(), 64, on_on_event)
-
+leituraImagem = ""
 sonar = 0
 lerCarta = False
-valores = 0
-switchAndar = False
-rangeOESTE = 0
-rangeSUL = 0
-rangeLESTE = 0
-rangeNORTE = 0
-direçãoInicial = 0
-irRemote.connect_infrared(DigitalPin.P11)
+valoresIRs = 0
 serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
+direçãoAtual = 0
 mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+andarReto = True
+
+def on_loud_sound():
+    serial.write_line(mensagemFoto)
+    lerCarta = True
+input.on_sound(DetectedSound.LOUD, on_loud_sound)
 
 def on_forever():
-    global valores, switchAndar, lerCarta, sonar
-    while switchAndar:
-        valores = turtleBit.line_tracking()
-        if valores > 0:
+    global valoresIRs, andarReto, lerCarta, sonar, leituraImagem, direçãoAtual
+    while andarReto:
+        valoresIRs = turtleBit.line_tracking()
+        if valoresIRs > 0:
             basic.show_leds("""
-                . # # # .
-                                # . . . #
-                                # # # # #
-                                # . . . #
+                                . # # # .
+                                # . # . #
+                                # # . # #
+                                # . # . #
                                 . # # # .
             """)
-            basic.pause(1500)
+            basic.pause(1200)
             turtleBit.state(MotorState.STOP)
             basic.clear_screen()
-            switchAndar = False
+            andarReto = False
             lerCarta = True
         else:
-            turtleBit.run(DIR.RUN_FORWARD, 100)
+            turtleBit.run(DIR.RUN_FORWARD, 55)
             basic.pause(200)
             basic.show_leds("""
-                . # . # .
+                                . # . # .
                                 . . . . .
                                 # # # # #
                                 # # # # #
                                 . # # # .
             """)
-            basic.pause(200)
-            basic.show_leds("""
-                . # . # .
-                                . . . . .
-                                # . . . #
-                                . # # # .
-                                . . . . .
-            """)
-    while lerCarta == True:
+    while lerCarta:
         sonar = turtleBit.ultra()
-        basic.show_number(sonar)
-        if sonar < 10 and sonar != 0:
-            leituraImagem = ""
+        if sonar < 12 and sonar < 7:
             serial.write_line(mensagemFoto)
-            basic.pause(5000)
-            if leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and (input.compass_heading() < rangeNORTE or input.compass_heading() > rangeOESTE):
-                switchAndar = True
+            basic.pause(2500)
+            leituraImagem = ""
+            if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
                 lerCarta = False
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and input.compass_heading() < rangeSUL:
-                switchAndar = True
+                turtleBit.run(DIR.RUN_BACK, 55)
+                basic.pause(280)
+                turtleBit.run(DIR.TURN_RIGHT, 55)
+                direçãoAtual += 1
+                if direçãoAtual > 3:
+                    direçãoAtual = 0
+                basic.pause(1062)
+                turtleBit.run(DIR.RUN_FORWARD, 55)
+                basic.pause(280)
+                turtleBit.state(MotorState.STOP)
+                lerCarta = True
+            elif leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}"):
                 lerCarta = False
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") and input.compass_heading() < rangeLESTE:
-                switchAndar = True
+                turtleBit.run(DIR.RUN_BACK, 55)
+                basic.pause(280)
+                turtleBit.run(DIR.TURN_LEFT, 55)
+                direçãoAtual += -1
+                if direçãoAtual < 0:
+                    direçãoAtual = 3
+                basic.pause(1145)
+                turtleBit.run(DIR.RUN_FORWARD, 55)
+                basic.pause(280)
+                turtleBit.state(MotorState.STOP)
+                lerCarta = True
+            elif leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and direçãoAtual == 0:
                 lerCarta = False
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") and input.compass_heading() < rangeOESTE:
-                switchAndar = True
+                andarReto = True
+            elif leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") and direçãoAtual == 1:
                 lerCarta = False
+                andarReto = True
+            elif leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") and direçãoAtual == 2:
+                lerCarta = False
+                andarReto = True
+            elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and direçãoAtual == 3:
+                lerCarta = False
+                andarReto = True
             else:
                 basic.pause(120)
                 basic.clear_screen()
                 basic.show_leds("""
-                    # # . # #
+                                        # # . # #
                                         # . . . .
                                         . # # # .
                                         # # . # #
                                         # . . . #
                 """)
-                basic.pause(200)
+                basic.pause(120)
                 basic.show_leds("""
-                    # # . # #
+                                        # # . # #
                                         . . . . .
                                         # # # # .
                                         # # . # #
                                         # . . . #
                 """)
-                basic.pause(200)
+                basic.pause(120)
                 basic.show_leds("""
-                    # # . # #
+                                        # # . # #
                                         . . . . .
                                         . # # # .
                                         # # . # #
