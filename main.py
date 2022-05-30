@@ -30,7 +30,7 @@ def on_forever():
                             . # . # .
                             # . . . #
             """)
-            basic.pause(1100)
+            basic.pause(900)
             turtleBit.state(MotorState.STOP)
             basic.clear_screen()
             andarReto = False

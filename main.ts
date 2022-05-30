@@ -31,7 +31,7 @@ basic.forever(function on_forever() {
                             . # . # .
                             # . . . #
             `)
-            basic.pause(1100)
+            basic.pause(900)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
             andarReto = false
