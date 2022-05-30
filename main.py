@@ -1,7 +1,7 @@
 leituraImagem = ""
 valoresIRs = 0
 lerCarta = False
-mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+mensagemFoto = "{\"FurbotText\": \"TirarFoto\"}"
 direçãoAtual = 0            #(N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 andarReto = True
 sonar = 0
@@ -50,7 +50,8 @@ def on_forever():
             serial.write_line(mensagemFoto)
             basic.pause(1640)
             leituraImagem = serial.read_string()
-        if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
+            leituraImagem.to_lower_case()
+        if leituraImagem.includes("{\"furbottext\": \"virardireita\"}"):
             lerCarta = False
             turtleBit.run(DIR.RUN_BACK, 55)
             basic.pause(280)
@@ -63,7 +64,7 @@ def on_forever():
             basic.pause(280)
             turtleBit.state(MotorState.STOP)
             lerCarta = True
-        elif leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}"):
+        elif leituraImagem.includes("{\"furbottext\": \"viraresquerda\"}"):
             lerCarta = False
             turtleBit.run(DIR.RUN_BACK, 55)
             basic.pause(280)
@@ -76,16 +77,16 @@ def on_forever():
             basic.pause(280)
             turtleBit.state(MotorState.STOP)
             lerCarta = True
-        elif leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and direçãoAtual == 0:
+        elif leituraImagem.includes("{\"furbottext\": \"andarnorte\"}") and direçãoAtual == 0:
             lerCarta = False
             andarReto = True
-        elif leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") and direçãoAtual == 1:
+        elif leituraImagem.includes("{\"furbottext\": \"andaroeste\"}") and direçãoAtual == 1:
             lerCarta = False
             andarReto = True
-        elif leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") and direçãoAtual == 2:
+        elif leituraImagem.includes("{\"furbottext\": \"andarsul\"}") and direçãoAtual == 2:
             lerCarta = False
             andarReto = True
-        elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and direçãoAtual == 3:
+        elif leituraImagem.includes("{\"furbottext\": \"andarleste\"}") and direçãoAtual == 3:
             lerCarta = False
             andarReto = True
         else:
@@ -114,4 +115,21 @@ def on_forever():
                             # # . # #
                             # . . . #
             """)
+def algoritmo_falhas():
+    if leituraImagem.length > 10:
+        if leituraImagem.includes("q" or "s" or "u"):
+            viraresquerda = True
+        elif leituraImagem.includes("i" or "t"):       
+            virardireita = True
+    elif leituraImagem.includes("and"):
+        tireiAndar = leituraImagem.replace("andar", None)
+        if leituraImagem.includes("u" or ""):
+            andarsul = True
+    elif leituraImagem.includes("vir"):
+        if leituraImagem.includes("q" or "s" or "u"):
+            viraresquerda = True
+        elif leituraImagem.includes("i" or "t"):
+            virardireita = True
+
+
 basic.forever(on_forever)

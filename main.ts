@@ -1,7 +1,7 @@
 let leituraImagem = ""
 let valoresIRs = 0
 let lerCarta = false
-let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+let mensagemFoto = "{\"FurbotText\": \"TirarFoto\"}"
 let direçãoAtual = 0
 // (N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 let andarReto = true
@@ -11,6 +11,35 @@ input.onSound(DetectedSound.Loud, function on_loud_sound() {
     serial.writeLine(mensagemFoto)
     let lerCarta = true
 })
+function algoritmo_falhas() {
+    let viraresquerda: boolean;
+    let virardireita: boolean;
+    let tireiAndar: string;
+    let andarsul: boolean;
+    if (leituraImagem.length > 10) {
+        if (leituraImagem.includes("q" || "s" || "u")) {
+            viraresquerda = true
+        } else if (leituraImagem.includes("i" || "t")) {
+            virardireita = true
+        }
+        
+    } else if (leituraImagem.includes("and")) {
+        tireiAndar = leituraImagem.replace("andar", null)
+        if (leituraImagem.includes("u" || "")) {
+            andarsul = true
+        }
+        
+    } else if (leituraImagem.includes("vir")) {
+        if (leituraImagem.includes("q" || "s" || "u")) {
+            viraresquerda = true
+        } else if (leituraImagem.includes("i" || "t")) {
+            virardireita = true
+        }
+        
+    }
+    
+}
+
 basic.forever(function on_forever() {
     
     while (andarReto) {
@@ -54,9 +83,10 @@ basic.forever(function on_forever() {
             serial.writeLine(mensagemFoto)
             basic.pause(1640)
             leituraImagem = serial.readString()
+            leituraImagem.toLowerCase()
         }
         
-        if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
+        if (leituraImagem.includes("{\"furbottext\": \"virardireita\"}")) {
             lerCarta = false
             turtleBit.run(DIR.Run_back, 55)
             basic.pause(280)
@@ -71,7 +101,7 @@ basic.forever(function on_forever() {
             basic.pause(280)
             turtleBit.state(MotorState.stop)
             lerCarta = true
-        } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
+        } else if (leituraImagem.includes("{\"furbottext\": \"viraresquerda\"}")) {
             lerCarta = false
             turtleBit.run(DIR.Run_back, 55)
             basic.pause(280)
@@ -86,16 +116,16 @@ basic.forever(function on_forever() {
             basic.pause(280)
             turtleBit.state(MotorState.stop)
             lerCarta = true
-        } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && direçãoAtual == 0) {
+        } else if (leituraImagem.includes("{\"furbottext\": \"andarnorte\"}") && direçãoAtual == 0) {
             lerCarta = false
             andarReto = true
-        } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && direçãoAtual == 1) {
+        } else if (leituraImagem.includes("{\"furbottext\": \"andaroeste\"}") && direçãoAtual == 1) {
             lerCarta = false
             andarReto = true
-        } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && direçãoAtual == 2) {
+        } else if (leituraImagem.includes("{\"furbottext\": \"andarsul\"}") && direçãoAtual == 2) {
             lerCarta = false
             andarReto = true
-        } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && direçãoAtual == 3) {
+        } else if (leituraImagem.includes("{\"furbottext\": \"andarleste\"}") && direçãoAtual == 3) {
             lerCarta = false
             andarReto = true
         } else {
