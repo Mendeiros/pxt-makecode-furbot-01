@@ -53,69 +53,69 @@ def on_forever():
             serial.write_line(mensagemFoto)
             basic.pause(2500)
             leituraImagem = "" #serial.read *bla bla bla*
-            if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
-                lerCarta = False
-                turtleBit.run(DIR.RUN_BACK, 55)
-                basic.pause(280)
-                turtleBit.run(DIR.TURN_RIGHT, 55)
-                direçãoAtual += 1
-                if direçãoAtual > 3:
-                    direçãoAtual = 0
-                basic.pause(1062)
-                turtleBit.run(DIR.RUN_FORWARD, 55)
-                basic.pause(280)
-                turtleBit.state(MotorState.STOP)
-                lerCarta = True
-            elif leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}"):
-                lerCarta = False
-                turtleBit.run(DIR.RUN_BACK, 55)
-                basic.pause(280)
-                turtleBit.run(DIR.TURN_LEFT, 55)
-                direçãoAtual += -1
-                if direçãoAtual < 0:
-                    direçãoAtual = 3
-                basic.pause(1145)
-                turtleBit.run(DIR.RUN_FORWARD, 55)
-                basic.pause(280)
-                turtleBit.state(MotorState.STOP)
-                lerCarta = True
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and direçãoAtual == 0:
-                lerCarta = False
-                andarReto = True
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") and direçãoAtual == 1:
-                lerCarta = False
-                andarReto = True
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") and direçãoAtual == 2:
-                lerCarta = False
-                andarReto = True
-            elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and direçãoAtual == 3:
-                lerCarta = False
-                andarReto = True
-            else:
-                basic.pause(120)
-                basic.clear_screen()
-                basic.show_leds("""
-                                    # # . # #
-                                    # . . . .
-                                    . # # # .
-                                    # # . # #
-                                    # . . . #
-                """)
-                basic.pause(120)
-                basic.show_leds("""
-                                    # # . # #
-                                    . . . . .
-                                    # # # # .
-                                    # # . # #
-                                    # . . . #
-                """)
-                basic.pause(120)
-                basic.show_leds("""
-                                    # # . # #
-                                    . . . . .
-                                    . # # # .
-                                    # # . # #
-                                    # . . . #
-                """)
+        if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
+            lerCarta = False
+            turtleBit.run(DIR.RUN_BACK, 55)
+            basic.pause(280)
+            turtleBit.run(DIR.TURN_RIGHT, 55)
+            direçãoAtual += 1
+            if direçãoAtual > 3:
+                direçãoAtual = 0
+            basic.pause(1062)
+            turtleBit.run(DIR.RUN_FORWARD, 55)
+            basic.pause(280)
+            turtleBit.state(MotorState.STOP)
+            lerCarta = True
+        elif leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}"):
+            lerCarta = False
+            turtleBit.run(DIR.RUN_BACK, 55)
+            basic.pause(280)
+            turtleBit.run(DIR.TURN_LEFT, 55)
+            direçãoAtual += -1
+            if direçãoAtual < 0:
+                direçãoAtual = 3
+            basic.pause(1145)
+            turtleBit.run(DIR.RUN_FORWARD, 55)
+            basic.pause(280)
+            turtleBit.state(MotorState.STOP)
+            lerCarta = True
+        elif leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") and direçãoAtual == 0:
+            lerCarta = False
+            andarReto = True
+        elif leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") and direçãoAtual == 1:
+            lerCarta = False
+            andarReto = True
+        elif leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") and direçãoAtual == 2:
+            lerCarta = False
+            andarReto = True
+        elif leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") and direçãoAtual == 3:
+            lerCarta = False
+            andarReto = True
+        else:
+            basic.pause(120)
+            basic.clear_screen()
+            basic.show_leds("""
+                            # # . # #
+                            # . . . .
+                            . # # # .
+                            # # . # #
+                            # . . . #
+            """)
+            basic.pause(120)
+            basic.show_leds("""
+                                # # . # #
+                                . . . . .
+                                # # # # .
+                                # # . # #
+                                # . . . #
+            """)
+            basic.pause(120)
+            basic.show_leds("""
+                                # # . # #
+                                . . . . .
+                                . # # # .
+                                # # . # #
+                                # . . . #
+            """)
 
 basic.forever(on_forever)
