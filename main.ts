@@ -111,19 +111,19 @@ basic.forever(function on_forever() {
             `)
             basic.pause(120)
             basic.showLeds(`
-                                # # . # #
-                                . . . . .
-                                # # # # .
-                                # # . # #
-                                # . . . #
+                            # # . # #
+                            . . . . .
+                            # # # # .
+                            # # . # #
+                            # . . . #
             `)
             basic.pause(120)
             basic.showLeds(`
-                                # # . # #
-                                . . . . .
-                                . # # # .
-                                # # . # #
-                                # . . . #
+                            # # . # #
+                            . . . . .
+                            . # # # .
+                            # # . # #
+                            # . . . #
             `)
         }
         

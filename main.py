@@ -103,19 +103,19 @@ def on_forever():
             """)
             basic.pause(120)
             basic.show_leds("""
-                                # # . # #
-                                . . . . .
-                                # # # # .
-                                # # . # #
-                                # . . . #
+                            # # . # #
+                            . . . . .
+                            # # # # .
+                            # # . # #
+                            # . . . #
             """)
             basic.pause(120)
             basic.show_leds("""
-                                # # . # #
-                                . . . . .
-                                . # # # .
-                                # # . # #
-                                # . . . #
+                            # # . # #
+                            . . . . .
+                            . # # # .
+                            # # . # #
+                            # . . . #
             """)
 
 basic.forever(on_forever)
