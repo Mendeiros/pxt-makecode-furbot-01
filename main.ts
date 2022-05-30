@@ -3,6 +3,7 @@ let valoresIRs = 0
 let lerCarta = false
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
 let direçãoAtual = 0
+// (N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 let andarReto = true
 let sonar = 0
 serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BaudRate115200)
@@ -53,6 +54,7 @@ basic.forever(function on_forever() {
             serial.writeLine(mensagemFoto)
             basic.pause(2500)
             leituraImagem = ""
+            // serial.read *bla bla bla*
             if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
                 lerCarta = false
                 turtleBit.run(DIR.Run_back, 55)

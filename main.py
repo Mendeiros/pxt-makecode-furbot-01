@@ -2,7 +2,7 @@ leituraImagem = ""
 valoresIRs = 0
 lerCarta = False
 mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-direçãoAtual = 0
+direçãoAtual = 0 #(N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 andarReto = True
 sonar = 0
 
@@ -52,7 +52,7 @@ def on_forever():
         if sonar < 12 and sonar < 7:
             serial.write_line(mensagemFoto)
             basic.pause(2500)
-            leituraImagem = ""
+            leituraImagem = "" #serial.read *bla bla bla*
             if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
                 lerCarta = False
                 turtleBit.run(DIR.RUN_BACK, 55)
