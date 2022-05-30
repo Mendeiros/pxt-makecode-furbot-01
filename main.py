@@ -5,14 +5,11 @@ mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
 direçãoAtual = 0 #(N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 andarReto = True
 sonar = 0
-
 serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
-
 def on_loud_sound():
     serial.write_line(mensagemFoto)
     lerCarta = True
 input.on_sound(DetectedSound.LOUD, on_loud_sound)
-
 def on_forever():
     global valoresIRs, andarReto, lerCarta, sonar, leituraImagem, direçãoAtual
     while andarReto:
@@ -32,7 +29,7 @@ def on_forever():
                             . . # . .
                             . # . # .
                             # . . . #
-                        """)
+            """)
             basic.pause(1100)
             turtleBit.state(MotorState.STOP)
             basic.clear_screen()
@@ -51,8 +48,8 @@ def on_forever():
         sonar = turtleBit.ultra()
         if sonar < 12 and sonar < 7:
             serial.write_line(mensagemFoto)
-            basic.pause(2500)
-            leituraImagem = "" #serial.read *bla bla bla*
+            basic.pause(1640)
+            leituraImagem = serial.read_string() #serial.read *bla bla bla*
         if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
             lerCarta = False
             turtleBit.run(DIR.RUN_BACK, 55)
@@ -117,5 +114,4 @@ def on_forever():
                             # # . # #
                             # . . . #
             """)
-
 basic.forever(on_forever)

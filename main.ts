@@ -30,7 +30,7 @@ basic.forever(function on_forever() {
                             . . # . .
                             . # . # .
                             # . . . #
-                        `)
+            `)
             basic.pause(1100)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
@@ -52,8 +52,8 @@ basic.forever(function on_forever() {
         sonar = turtleBit.ultra()
         if (sonar < 12 && sonar < 7) {
             serial.writeLine(mensagemFoto)
-            basic.pause(2500)
-            leituraImagem = ""
+            basic.pause(1640)
+            leituraImagem = serial.readString()
         }
         
         // serial.read *bla bla bla*
