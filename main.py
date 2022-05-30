@@ -18,19 +18,19 @@ def on_forever():
         valoresIRs = turtleBit.line_tracking()
         if valoresIRs > 0:
             basic.show_leds("""
-                                . # # # .
-                                # . # . #
-                                # # . # #
-                                # . # . #
-                                . # # # .
+                            . # # # .
+                            # . # . #
+                            # # . # #
+                            # . # . #
+                            . # # # .
             """)
             basic.pause(100)
             basic.show_leds("""
-                                # . . . #
-                                . # . # .
-                                . . # . .
-                                . # . # .
-                                # . . . #
+                            # . . . #
+                            . # . # .
+                            . . # . .
+                            . # . # .
+                            # . . . #
                         """)
             basic.pause(1100)
             turtleBit.state(MotorState.STOP)

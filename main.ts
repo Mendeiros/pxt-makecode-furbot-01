@@ -16,19 +16,19 @@ basic.forever(function on_forever() {
         valoresIRs = turtleBit.LineTracking()
         if (valoresIRs > 0) {
             basic.showLeds(`
-                                . # # # .
-                                # . # . #
-                                # # . # #
-                                # . # . #
-                                . # # # .
+                            . # # # .
+                            # . # . #
+                            # # . # #
+                            # . # . #
+                            . # # # .
             `)
             basic.pause(100)
             basic.showLeds(`
-                                # . . . #
-                                . # . # .
-                                . . # . .
-                                . # . # .
-                                # . . . #
+                            # . . . #
+                            . # . # .
+                            . . # . .
+                            . # . # .
+                            # . . . #
                         `)
             basic.pause(1100)
             turtleBit.state(MotorState.stop)
