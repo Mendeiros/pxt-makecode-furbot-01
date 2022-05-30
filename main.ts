@@ -1,11 +1,11 @@
 let leituraImagem = ""
-let sonar = 0
-let lerCarta = false
 let valoresIRs = 0
-serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BaudRate115200)
-let direçãoAtual = 0
+let lerCarta = false
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+let direçãoAtual = 0
 let andarReto = true
+let sonar = 0
+serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BaudRate115200)
 input.onSound(DetectedSound.Loud, function on_loud_sound() {
     serial.writeLine(mensagemFoto)
     let lerCarta = true
@@ -38,11 +38,11 @@ basic.forever(function on_forever() {
         } else {
             turtleBit.run(DIR.Run_forward, 55)
             basic.showLeds(`
-                                . # . # .
-                                . . . . .
-                                # # # # #
-                                # # # # #
-                                . # # # .
+                            . # . # .
+                            . . . . .
+                            # # # # #
+                            # # # # #
+                            . # # # .
             `)
         }
         
@@ -99,27 +99,27 @@ basic.forever(function on_forever() {
                 basic.pause(120)
                 basic.clearScreen()
                 basic.showLeds(`
-                                        # # . # #
-                                        # . . . .
-                                        . # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    # . . . .
+                                    . # # # .
+                                    # # . # #
+                                    # . . . #
                 `)
                 basic.pause(120)
                 basic.showLeds(`
-                                        # # . # #
-                                        . . . . .
-                                        # # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    . . . . .
+                                    # # # # .
+                                    # # . # #
+                                    # . . . #
                 `)
                 basic.pause(120)
                 basic.showLeds(`
-                                        # # . # #
-                                        . . . . .
-                                        . # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    . . . . .
+                                    . # # # .
+                                    # # . # #
+                                    # . . . #
                 `)
             }
             

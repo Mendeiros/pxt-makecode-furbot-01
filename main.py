@@ -1,11 +1,12 @@
 leituraImagem = ""
-sonar = 0
-lerCarta = False
 valoresIRs = 0
-serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
-direçãoAtual = 0
+lerCarta = False
 mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
+direçãoAtual = 0
 andarReto = True
+sonar = 0
+
+serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
 
 def on_loud_sound():
     serial.write_line(mensagemFoto)
@@ -40,11 +41,11 @@ def on_forever():
         else:
             turtleBit.run(DIR.RUN_FORWARD, 55)
             basic.show_leds("""
-                                . # . # .
-                                . . . . .
-                                # # # # #
-                                # # # # #
-                                . # # # .
+                            . # . # .
+                            . . . . .
+                            # # # # #
+                            # # # # #
+                            . # # # .
             """)
     while lerCarta:
         sonar = turtleBit.ultra()
@@ -94,26 +95,27 @@ def on_forever():
                 basic.pause(120)
                 basic.clear_screen()
                 basic.show_leds("""
-                                        # # . # #
-                                        # . . . .
-                                        . # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    # . . . .
+                                    . # # # .
+                                    # # . # #
+                                    # . . . #
                 """)
                 basic.pause(120)
                 basic.show_leds("""
-                                        # # . # #
-                                        . . . . .
-                                        # # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    . . . . .
+                                    # # # # .
+                                    # # . # #
+                                    # . . . #
                 """)
                 basic.pause(120)
                 basic.show_leds("""
-                                        # # . # #
-                                        . . . . .
-                                        . # # # .
-                                        # # . # #
-                                        # . . . #
+                                    # # . # #
+                                    . . . . .
+                                    . # # # .
+                                    # # . # #
+                                    # . . . #
                 """)
+
 basic.forever(on_forever)
