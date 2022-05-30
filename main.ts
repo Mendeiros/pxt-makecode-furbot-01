@@ -22,14 +22,21 @@ basic.forever(function on_forever() {
                                 # . # . #
                                 . # # # .
             `)
-            basic.pause(1200)
+            basic.pause(100)
+            basic.showLeds(`
+                                # . . . #
+                                . # . # .
+                                . . # . .
+                                . # . # .
+                                # . . . #
+                        `)
+            basic.pause(1100)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
             andarReto = false
             lerCarta = true
         } else {
             turtleBit.run(DIR.Run_forward, 55)
-            basic.pause(200)
             basic.showLeds(`
                                 . # . # .
                                 . . . . .

@@ -24,14 +24,21 @@ def on_forever():
                                 # . # . #
                                 . # # # .
             """)
-            basic.pause(1200)
+            basic.pause(100)
+            basic.show_leds("""
+                                # . . . #
+                                . # . # .
+                                . . # . .
+                                . # . # .
+                                # . . . #
+                        """)
+            basic.pause(1100)
             turtleBit.state(MotorState.STOP)
             basic.clear_screen()
             andarReto = False
             lerCarta = True
         else:
             turtleBit.run(DIR.RUN_FORWARD, 55)
-            basic.pause(200)
             basic.show_leds("""
                                 . # . # .
                                 . . . . .
