@@ -56,7 +56,6 @@ basic.forever(function on_forever() {
             leituraImagem = serial.readString()
         }
         
-        // serial.read *bla bla bla*
         if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
             lerCarta = false
             turtleBit.run(DIR.Run_back, 55)
@@ -104,6 +103,14 @@ basic.forever(function on_forever() {
             basic.clearScreen()
             basic.showLeds(`
                             # # . # #
+                            . . . . .
+                            . # # # .
+                            # # . # #
+                            # . . . #
+            `)
+            basic.pause(120)
+            basic.showLeds(`
+                            # # . # #
                             # . . . .
                             . # # # .
                             # # . # #
@@ -114,14 +121,6 @@ basic.forever(function on_forever() {
                             # # . # #
                             . . . . .
                             # # # # .
-                            # # . # #
-                            # . . . #
-            `)
-            basic.pause(120)
-            basic.showLeds(`
-                            # # . # #
-                            . . . . .
-                            . # # # .
                             # # . # #
                             # . . . #
             `)

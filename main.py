@@ -2,7 +2,7 @@ leituraImagem = ""
 valoresIRs = 0
 lerCarta = False
 mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-direçãoAtual = 0 #(N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
+direçãoAtual = 0            #(N=0, O=1, S=2, L=3), VIRARDIREITA = +1, VIRARESQUERDA = -1;
 andarReto = True
 sonar = 0
 serial.redirect(SerialPin.P12, SerialPin.P13, BaudRate.BAUD_RATE115200)
@@ -49,7 +49,7 @@ def on_forever():
         if sonar < 12 and sonar < 7:
             serial.write_line(mensagemFoto)
             basic.pause(1640)
-            leituraImagem = serial.read_string() #serial.read *bla bla bla*
+            leituraImagem = serial.read_string()
         if leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}"):
             lerCarta = False
             turtleBit.run(DIR.RUN_BACK, 55)
@@ -93,6 +93,14 @@ def on_forever():
             basic.clear_screen()
             basic.show_leds("""
                             # # . # #
+                            . . . . .
+                            . # # # .
+                            # # . # #
+                            # . . . #
+            """)
+            basic.pause(120)
+            basic.show_leds("""
+                            # # . # #
                             # . . . .
                             . # # # .
                             # # . # #
@@ -103,14 +111,6 @@ def on_forever():
                             # # . # #
                             . . . . .
                             # # # # .
-                            # # . # #
-                            # . . . #
-            """)
-            basic.pause(120)
-            basic.show_leds("""
-                            # # . # #
-                            . . . . .
-                            . # # # .
                             # # . # #
                             # . . . #
             """)
