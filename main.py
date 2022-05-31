@@ -14,7 +14,7 @@ def on_forever():
     global valoresIRs, andarReto, lerCarta, sonar, leituraImagem, direçãoAtual
     while andarReto:
         valoresIRs = turtleBit.line_tracking()
-        if valoresIRs > 0:
+        if valoresIRs != 0:
             basic.show_leds("""
                             . # # # .
                             # . # . #

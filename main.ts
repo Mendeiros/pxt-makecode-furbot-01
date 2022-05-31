@@ -44,7 +44,7 @@ basic.forever(function on_forever() {
     
     while (andarReto) {
         valoresIRs = turtleBit.LineTracking()
-        if (valoresIRs > 0) {
+        if (valoresIRs != 0) {
             basic.showLeds(`
                             . # # # .
                             # . # . #
