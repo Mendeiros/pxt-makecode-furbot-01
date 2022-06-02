@@ -1,15 +1,26 @@
-let leituraImagem = ""
+control.onEvent(irRemote.returnIrButton(), 64, function () {
+    direçãoInicial = input.compassHeading()
+    rangeNORTE = direçãoInicial + 45
+    rangeLESTE = rangeNORTE + 90
+    rangeSUL = rangeLESTE + 90
+    rangeOESTE = rangeSUL + 90
+})
 let sonar = 0
 let lerCarta = false
 let valores = 0
+let switchAndar = false
+let rangeOESTE = 0
+let rangeSUL = 0
+let rangeLESTE = 0
+let rangeNORTE = 0
+let direçãoInicial = 0
+irRemote.connectInfrared(DigitalPin.P11)
 serial.redirect(
 SerialPin.P12,
 SerialPin.P13,
 BaudRate.BaudRate115200
 )
-let direçãoAtual = 0
 let mensagemFoto = "{\"FurbotText\": \"tirar foto\"}"
-let switchAndar = true
 basic.forever(function () {
     while (switchAndar) {
         valores = turtleBit.LineTracking()
@@ -21,17 +32,17 @@ basic.forever(function () {
                 # . . . #
                 . # # # .
                 `)
-            basic.pause(1250)
+            basic.pause(1500)
             turtleBit.state(MotorState.stop)
             basic.clearScreen()
             switchAndar = false
             lerCarta = true
         } else {
-            turtleBit.run(DIR.Run_forward, 55)
+            turtleBit.run(DIR.Run_forward, 100)
             basic.pause(200)
             basic.showLeds(`
                 . # . # .
-                . . . . .
+                # . . . #
                 # # # # #
                 # # # # #
                 . # # # .
@@ -46,52 +57,25 @@ basic.forever(function () {
                 `)
         }
     }
-    while (lerCarta) {
+    while (lerCarta == true) {
         sonar = turtleBit.ultra()
-        if (sonar < 12 && sonar < 7) {
+        basic.showNumber(sonar)
+        if (sonar < 10 && sonar != 0) {
+            let leituraImagem = ""
             serial.writeLine(mensagemFoto)
-            basic.pause(2500)
-            leituraImagem = ""
-            if (leituraImagem.includes("{\"FurbotText\": \"VIRARDIREITA\"}")) {
-                lerCarta = false
-                turtleBit.run(DIR.Run_back, 55)
-                basic.pause(280)
-                turtleBit.run(DIR.Turn_Right, 55)
-                direçãoAtual += 1
-                if (direçãoAtual > 3) {
-                    direçãoAtual = 0
-                }
-                basic.pause(1062)
-                turtleBit.run(DIR.Run_forward, 55)
-                basic.pause(280)
-                turtleBit.state(MotorState.stop)
-                lerCarta = true
-            } else if (leituraImagem.includes("{\"FurbotText\": \"VIRARESQUERDA\"}")) {
-                lerCarta = false
-                turtleBit.run(DIR.Run_back, 55)
-                basic.pause(280)
-                turtleBit.run(DIR.Turn_Left, 55)
-                direçãoAtual += -1
-                if (direçãoAtual < 0) {
-                    direçãoAtual = 3
-                }
-                basic.pause(1145)
-                turtleBit.run(DIR.Run_forward, 55)
-                basic.pause(280)
-                turtleBit.state(MotorState.stop)
-                lerCarta = true
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && direçãoAtual == 0) {
-                lerCarta = false
+            basic.pause(5000)
+            if (leituraImagem.includes("{\"FurbotText\": \"ANDARNORTE\"}") && (input.compassHeading() < rangeNORTE || input.compassHeading() > rangeOESTE)) {
                 switchAndar = true
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && direçãoAtual == 1) {
                 lerCarta = false
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && input.compassHeading() < rangeSUL) {
                 switchAndar = true
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && direçãoAtual == 2) {
                 lerCarta = false
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARLESTE\"}") && input.compassHeading() < rangeLESTE) {
                 switchAndar = true
-            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDARSUL\"}") && direçãoAtual == 3) {
                 lerCarta = false
+            } else if (leituraImagem.includes("{\"FurbotText\": \"ANDAROESTE\"}") && input.compassHeading() < rangeOESTE) {
                 switchAndar = true
+                lerCarta = false
             } else {
                 basic.pause(120)
                 basic.clearScreen()
